@@ -4,11 +4,68 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useApp } from '../../context/AppContext';
-import { Bike, Power, ArrowLeft, Navigation, ShieldCheck } from 'lucide-react';
+import { Bike, Power, ArrowLeft, ShieldAlert, Lock } from 'lucide-react';
+import { Button } from '../../components/ui/Button';
 
 export default function RiderLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const { rider, isRiderOnline, toggleRiderOnline } = useApp();
+  const { rider, isRiderOnline, toggleRiderOnline, currentRole, switchRole, openAuthModal } = useApp();
+
+  const isAuthorized = currentRole === 'DELIVERY_RIDER' || currentRole === 'SUPER_ADMIN';
+
+  if (!isAuthorized) {
+    return (
+      <div className="max-w-md mx-auto my-12 p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl text-center space-y-5">
+        <div className="w-16 h-16 rounded-2xl bg-blue-500/10 text-blue-500 mx-auto flex items-center justify-center border border-blue-500/20">
+          <ShieldAlert className="w-8 h-8" />
+        </div>
+
+        <div>
+          <span className="text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded bg-blue-500/20 text-blue-500 border border-blue-500/30">
+            RBAC Courier Guard
+          </span>
+          <h2 className="text-xl font-black text-slate-900 dark:text-white mt-2">
+            Courier Portal Restricted
+          </h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
+            Direct access to dispatch and route fulfillment requires <strong className="text-slate-700 dark:text-slate-300">Courier (Rider)</strong> privileges. Your active session is currently set to <strong>{currentRole}</strong>.
+          </p>
+        </div>
+
+        <div className="flex flex-col gap-2 pt-2">
+          <Button
+            variant="primary"
+            size="md"
+            onClick={() => switchRole('DELIVERY_RIDER')}
+            className="rounded-2xl font-black shadow-glow bg-blue-600 hover:bg-blue-700"
+          >
+            Authenticate as Courier (Rakib)
+          </Button>
+
+          <Button
+            variant="outline"
+            size="md"
+            onClick={openAuthModal}
+            leftIcon={<Lock className="w-4 h-4" />}
+            className="rounded-2xl font-bold"
+          >
+            Sign In with Courier Credentials
+          </Button>
+
+          <Link href="/">
+            <Button
+              variant="ghost"
+              size="sm"
+              leftIcon={<ArrowLeft className="w-4 h-4" />}
+              className="text-xs text-slate-400 hover:text-slate-600 mt-1"
+            >
+              Return to Customer Store
+            </Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto">

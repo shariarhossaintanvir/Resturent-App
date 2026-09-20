@@ -27,7 +27,7 @@ import {
 } from 'lucide-react';
 
 export default function ProfilePage() {
-  const { userProfile, updateUserProfile, orders, reservations, favoriteFoodIds, favoriteRestaurantIds } = useApp();
+  const { userProfile, updateUserProfile, orders, reservations, favoriteFoodIds, favoriteRestaurantIds, logout } = useApp();
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState(userProfile.name);
   const [email, setEmail] = useState(userProfile.email);
@@ -285,7 +285,7 @@ export default function ProfilePage() {
 
         {/* Logout */}
         <button
-          onClick={() => alert('Simulated logout. Your session is active for demo purposes.')}
+          onClick={logout}
           className="w-full flex items-center justify-between p-4 sm:p-5 hover:bg-rose-50/50 dark:hover:bg-rose-950/20 text-rose-600 dark:text-rose-400 transition-colors text-left"
         >
           <div className="flex items-center gap-4">
@@ -294,7 +294,7 @@ export default function ProfilePage() {
             </div>
             <div>
               <h3 className="font-bold text-sm">Sign Out</h3>
-              <p className="text-xs text-rose-500/70">Clear active demo session</p>
+              <p className="text-xs text-rose-500/70">Invalidate session and clear cookies</p>
             </div>
           </div>
           <ChevronRight className="w-4 h-4" />

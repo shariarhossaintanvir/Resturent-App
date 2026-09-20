@@ -1,7 +1,0 @@
-{
-  "/page": "app/page.js",
-  "/notifications/page": "app/notifications/page.js",
-  "/explore/page": "app/explore/page.js",
-  "/restaurants/[id]/page": "app/restaurants/[id]/page.js",
-  "/admin/page": "app/admin/page.js"
-}

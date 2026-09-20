@@ -6,6 +6,7 @@ import { Navbar } from '../components/layout/Navbar';
 import { BottomNav } from '../components/layout/BottomNav';
 import { Footer } from '../components/layout/Footer';
 import { ToastContainer } from '../components/ui/Toast';
+import { AuthModalWrapper } from '../components/auth/AuthModalWrapper';
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
@@ -43,6 +44,7 @@ export default function RootLayout({
           <Footer />
           <BottomNav />
           <ToastContainer />
+          <AuthModalWrapper />
         </AppProvider>
       </body>
     </html>

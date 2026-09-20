@@ -19,6 +19,7 @@ import {
   Play,
   RotateCcw,
   Star,
+  ShieldAlert,
 } from 'lucide-react';
 import { formatPrice, getStatusBadgeStyle } from '../../../utils/formatters';
 
@@ -27,10 +28,11 @@ export default function TrackingPage() {
   const router = useRouter();
   const orderId = params.id as string;
 
-  const { getOrder, simulateNextStatus, updateOrderStatus, orders } = useApp();
+  const { getOrder, simulateNextStatus, updateOrderStatus, currentUser } = useApp();
   const [showReviewModal, setShowReviewModal] = useState(false);
 
-  const order = getOrder(orderId) || orders[0];
+  // Remediate IDOR: Lookup target order specifically without insecure fallback
+  const order = getOrder(orderId);
 
   if (!order) {
     return (
@@ -40,6 +42,33 @@ export default function TrackingPage() {
         <Link href="/orders">
           <Button variant="primary" size="md">
             View All Orders
+          </Button>
+        </Link>
+      </div>
+    );
+  }
+
+  // IDOR & BOLA Guard: Verify ownership or authorized role
+  const isOwner =
+    !currentUser || // Demo offline fallback
+    currentUser.role === 'SUPER_ADMIN' ||
+    (currentUser.role === 'RESTAURANT_ADMIN' && (!currentUser.restaurantId || currentUser.restaurantId === order.restaurantId)) ||
+    (currentUser.role === 'DELIVERY_RIDER' && order.rider?.id === currentUser.id) ||
+    (order.customerId === currentUser.id);
+
+  if (!isOwner) {
+    return (
+      <div className="max-w-md mx-auto text-center py-20 space-y-4 bg-white dark:bg-slate-900 p-8 rounded-3xl border border-rose-500/20 shadow-xl">
+        <div className="w-16 h-16 rounded-2xl bg-rose-500/10 text-rose-500 flex items-center justify-center mx-auto border border-rose-500/20">
+          <ShieldAlert className="w-8 h-8" />
+        </div>
+        <h2 className="text-xl font-black text-slate-900 dark:text-white">Access Denied (IDOR Protected)</h2>
+        <p className="text-xs text-slate-500 dark:text-slate-400">
+          You are authenticated as <strong>{currentUser?.email}</strong>. This delivery order belongs to another customer account and cannot be tracked without authorization.
+        </p>
+        <Link href="/orders">
+          <Button variant="primary" size="md" className="rounded-2xl font-bold">
+            Return to My Orders
           </Button>
         </Link>
       </div>

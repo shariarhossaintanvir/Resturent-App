@@ -18,6 +18,8 @@ import {
   Menu,
   X,
   ChevronDown,
+  Lock,
+  ShieldCheck,
 } from 'lucide-react';
 import { formatPrice } from '../../utils/formatters';
 
@@ -29,6 +31,10 @@ export const Navbar: React.FC = () => {
     total,
     unreadNotificationCount,
     userProfile,
+    currentRole,
+    openAuthModal,
+    switchRole,
+    currentUser,
   } = useApp();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -65,35 +71,64 @@ export const Navbar: React.FC = () => {
               <span className="sm:hidden">20% OFF with code <strong>FIRST20</strong></span>
             </div>
 
-            {/* Quick Demo Role Switcher */}
-            <div className="flex items-center gap-2 font-medium">
-              <span className="opacity-75 hidden md:inline">Quick Portal Demo:</span>
-              <Link
-                href="/"
-                className={`px-2.5 py-0.5 rounded-md transition-all text-xs ${
-                  !isAdmin && !isRider ? 'bg-white text-primary-700 font-bold shadow-sm' : 'hover:bg-white/10 text-white'
+            {/* Quick Portal Role Switcher */}
+            <div className="flex items-center gap-1.5 font-medium">
+              <span className="opacity-80 hidden md:inline text-[11px]">Active Session:</span>
+              <button
+                type="button"
+                onClick={async () => {
+                  await switchRole('CUSTOMER');
+                  if (pathname.startsWith('/admin') || pathname.startsWith('/rider')) {
+                    router.push('/');
+                  }
+                }}
+                className={`px-2.5 py-0.5 rounded-md transition-all text-xs font-bold ${
+                  currentRole === 'CUSTOMER'
+                    ? 'bg-white text-primary-700 shadow-sm ring-1 ring-white/50'
+                    : 'hover:bg-white/10 text-white/90'
                 }`}
               >
                 Customer
-              </Link>
-              <Link
-                href="/admin"
-                className={`px-2.5 py-0.5 rounded-md transition-all text-xs flex items-center gap-1 ${
-                  isAdmin ? 'bg-white text-primary-700 font-bold shadow-sm' : 'hover:bg-white/10 text-white'
+              </button>
+              <button
+                type="button"
+                onClick={async () => {
+                  await switchRole('RESTAURANT_ADMIN');
+                  router.push('/admin');
+                }}
+                className={`px-2.5 py-0.5 rounded-md transition-all text-xs font-bold flex items-center gap-1 ${
+                  currentRole === 'RESTAURANT_ADMIN'
+                    ? 'bg-white text-primary-700 shadow-sm ring-1 ring-white/50'
+                    : 'hover:bg-white/10 text-white/90'
                 }`}
               >
                 <ShieldAlert className="w-3 h-3" />
                 Admin
-              </Link>
-              <Link
-                href="/rider"
-                className={`px-2.5 py-0.5 rounded-md transition-all text-xs flex items-center gap-1 ${
-                  isRider ? 'bg-white text-primary-700 font-bold shadow-sm' : 'hover:bg-white/10 text-white'
+              </button>
+              <button
+                type="button"
+                onClick={async () => {
+                  await switchRole('DELIVERY_RIDER');
+                  router.push('/rider');
+                }}
+                className={`px-2.5 py-0.5 rounded-md transition-all text-xs font-bold flex items-center gap-1 ${
+                  currentRole === 'DELIVERY_RIDER'
+                    ? 'bg-white text-primary-700 shadow-sm ring-1 ring-white/50'
+                    : 'hover:bg-white/10 text-white/90'
                 }`}
               >
                 <Bike className="w-3 h-3" />
                 Rider
-              </Link>
+              </button>
+              <button
+                type="button"
+                onClick={openAuthModal}
+                className="hidden sm:inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-black/30 hover:bg-black/40 text-[11px] font-bold text-white border border-white/20 transition-all ml-1 shadow-sm"
+                title="Security & Authentication Portal"
+              >
+                <Lock className="w-3 h-3 text-emerald-400" />
+                <span>Sign In</span>
+              </button>
             </div>
           </div>
         </div>

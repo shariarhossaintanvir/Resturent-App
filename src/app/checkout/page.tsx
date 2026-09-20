@@ -46,11 +46,11 @@ export default function CheckoutPage() {
   const [contactName, setContactName] = useState(userProfile.name);
   const [contactPhone, setContactPhone] = useState(userProfile.phone);
 
-  // Simulated Payment fields
-  const [cardNumber, setCardNumber] = useState('4242 •••• •••• 4242');
-  const [cardExpiry, setCardExpiry] = useState('08/28');
-  const [cardCvc, setCardCvc] = useState('888');
+  // Simulated tokenized payment method (PCI DSS: Sensitive PAN/CVV is never stored or transmitted in plain state)
   const [mobileWalletNumber, setMobileWalletNumber] = useState('01819-456789');
+  const [cardNumber, setCardNumber] = useState('•••• •••• •••• 4242');
+  const [cardExpiry, setCardExpiry] = useState('12/28');
+  const [cardCvc, setCardCvc] = useState('•••');
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showNewAddressModal, setShowNewAddressModal] = useState(false);

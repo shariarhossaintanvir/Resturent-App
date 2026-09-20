@@ -33,7 +33,31 @@ export interface ToastMessage {
   type?: 'success' | 'info' | 'error';
 }
 
+export type AuthRole = 'CUSTOMER' | 'RESTAURANT_ADMIN' | 'DELIVERY_RIDER' | 'SUPER_ADMIN';
+
+export interface AuthenticatedUser {
+  id: string;
+  name: string;
+  email: string;
+  role: AuthRole;
+  restaurantId?: string;
+  avatar: string;
+  phone?: string;
+}
+
 interface AppContextType {
+  // Security & Authentication
+  currentUser: AuthenticatedUser | null;
+  isAuthenticated: boolean;
+  currentRole: AuthRole;
+  isAuthModalOpen: boolean;
+  openAuthModal: () => void;
+  closeAuthModal: () => void;
+  login: (email: string, pass: string) => Promise<{ success: boolean; error?: string }>;
+  register: (data: { name: string; email: string; phone: string; password: string }) => Promise<{ success: boolean; error?: string }>;
+  logout: () => Promise<void>;
+  switchRole: (role: AuthRole) => Promise<{ success: boolean; error?: string }>;
+
   // Cart
   cart: CartItem[];
   cartCount: number;
@@ -149,6 +173,20 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [isRiderOnline, setIsRiderOnline] = useState<boolean>(true);
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
 
+  // Security & Authentication State
+  const [currentUser, setCurrentUser] = useState<AuthenticatedUser | null>({
+    id: initialUserProfile.id,
+    name: initialUserProfile.name,
+    email: initialUserProfile.email,
+    phone: initialUserProfile.phone,
+    role: 'CUSTOMER',
+    avatar: initialUserProfile.avatar,
+  });
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+
+  const openAuthModal = useCallback(() => setIsAuthModalOpen(true), []);
+  const closeAuthModal = useCallback(() => setIsAuthModalOpen(false), []);
+
   const [notifications, setNotifications] = useState<NotificationItem[]>([
     {
       id: 'notif-1',
@@ -169,6 +207,65 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       link: '/explore',
     },
   ]);
+
+  // Toast dispatch
+  const showToast = useCallback((message: string, type: 'success' | 'info' | 'error' = 'success') => {
+    const id = `${Date.now()}-${Math.random().toString(36).substr(2, 4)}`;
+    setToasts((prev) => [...prev, { id, message, type }]);
+    setTimeout(() => {
+      setToasts((prev) => prev.filter((t) => t.id !== id));
+    }, 3500);
+  }, []);
+
+  const removeToast = useCallback((id: string) => {
+    setToasts((prev) => prev.filter((t) => t.id !== id));
+  }, []);
+
+  // Sync to localStorage
+  const saveToStorage = useCallback((key: string, value: unknown) => {
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem(key, JSON.stringify(value));
+      } catch (err) {
+        console.warn('LocalStorage save error:', err);
+      }
+    }
+  }, []);
+
+  // Sync session on mount
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    fetch('/api/auth/session')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.authenticated && data.user) {
+          setCurrentUser(data.user);
+          setUserProfile((prev) => ({
+            ...prev,
+            id: data.user.id,
+            name: data.user.name,
+            email: data.user.email,
+            avatar: data.user.avatar,
+          }));
+        } else {
+          // Initialize demo customer session with real HttpOnly signed session
+          fetch('/api/auth/demo-switch', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ role: 'CUSTOMER' }),
+          })
+            .then((r) => r.json())
+            .then((d) => {
+              if (d.success && d.user) {
+                setCurrentUser(d.user);
+              }
+            })
+            .catch(() => {});
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   // Load from localStorage on client mount
   useEffect(() => {
@@ -215,28 +312,94 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   }, []);
 
-  // Sync to localStorage
-  const saveToStorage = useCallback((key: string, value: unknown) => {
-    if (typeof window !== 'undefined') {
-      try {
-        localStorage.setItem(key, JSON.stringify(value));
-      } catch (err) {
-        console.warn('LocalStorage save error:', err);
+  // Authentication methods
+  const login = useCallback(async (email: string, pass: string) => {
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password: pass }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        return { success: false, error: data.error || 'Authentication failed' };
       }
+      setCurrentUser(data.user);
+      setUserProfile((prev) => ({
+        ...prev,
+        id: data.user.id,
+        name: data.user.name,
+        email: data.user.email,
+        phone: data.user.phone || prev.phone,
+        avatar: data.user.avatar,
+      }));
+      return { success: true };
+    } catch {
+      return { success: false, error: 'Connection error during login' };
     }
   }, []);
 
-  // Toast dispatch
-  const showToast = useCallback((message: string, type: 'success' | 'info' | 'error' = 'success') => {
-    const id = `${Date.now()}-${Math.random().toString(36).substr(2, 4)}`;
-    setToasts((prev) => [...prev, { id, message, type }]);
-    setTimeout(() => {
-      setToasts((prev) => prev.filter((t) => t.id !== id));
-    }, 3500);
+  const register = useCallback(async (data: { name: string; email: string; phone: string; password: string }) => {
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      const resData = await res.json();
+      if (!res.ok || !resData.success) {
+        return { success: false, error: resData.error || 'Registration failed' };
+      }
+      setCurrentUser(resData.user);
+      setUserProfile((prev) => ({
+        ...prev,
+        id: resData.user.id,
+        name: resData.user.name,
+        email: resData.user.email,
+        phone: resData.user.phone,
+        avatar: resData.user.avatar,
+      }));
+      return { success: true };
+    } catch {
+      return { success: false, error: 'Connection error during registration' };
+    }
   }, []);
 
-  const removeToast = useCallback((id: string) => {
-    setToasts((prev) => prev.filter((t) => t.id !== id));
+  const logout = useCallback(async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      setCurrentUser(null);
+      showToast('You have been logged out securely.', 'info');
+    } catch {
+      setCurrentUser(null);
+      showToast('Session ended', 'info');
+    }
+  }, [showToast]);
+
+  const switchRole = useCallback(async (role: AuthRole) => {
+    try {
+      const res = await fetch('/api/auth/demo-switch', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ role }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        return { success: false, error: data.error || 'Role switch failed' };
+      }
+      setCurrentUser(data.user);
+      setUserProfile((prev) => ({
+        ...prev,
+        id: data.user.id,
+        name: data.user.name,
+        email: data.user.email,
+        phone: data.user.phone || prev.phone,
+        avatar: data.user.avatar,
+      }));
+      return { success: true };
+    } catch {
+      return { success: false, error: 'Connection error during role switch' };
+    }
   }, []);
 
   // Cart Calculations
@@ -246,7 +409,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const deliveryFee = useMemo(() => {
     if (cart.length === 0) return 0;
-    // Base fee from first restaurant
     const rest = restaurants.find((r) => r.id === cart[0].restaurantId);
     return rest ? rest.deliveryFee : 60;
   }, [cart, restaurants]);
@@ -278,7 +440,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   // Cart operations
   const addToCart = useCallback(
     (foodItem: FoodItem, quantity: number = 1, addons: SelectedAddon[] = [], instructions?: string) => {
-      // Enforce same restaurant or prompt
       const rest = restaurants.find((r) => r.id === foodItem.restaurantId);
       const restaurantName = rest ? rest.name : 'Restaurant';
 
@@ -286,7 +447,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const unitPrice = foodItem.price + addonTotal;
       const itemTotal = unitPrice * quantity;
 
-      // Unique hash for item with addons
       const addonKey = addons
         .map((a) => a.optionId)
         .sort()
@@ -294,7 +454,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const cartItemId = `${foodItem.id}_${addonKey}`;
 
       setCart((prev) => {
-        // If from another restaurant, reset cart
         if (prev.length > 0 && prev[0].restaurantId !== foodItem.restaurantId) {
           showToast(`Cart reset to items from ${restaurantName}`, 'info');
           const newCart = [
@@ -485,8 +644,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
       const newOrder: Order = {
         id: newOrderId,
-        customerId: userProfile.id,
-        customerName: userProfile.name,
+        customerId: currentUser?.id || userProfile.id,
+        customerName: currentUser?.name || userProfile.name,
         customerPhone: userProfile.phone,
         restaurantId: restId,
         restaurantName: restName,
@@ -516,6 +675,20 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         return updated;
       });
 
+      // Synchronize with secure server API endpoint
+      fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: cart,
+          deliveryAddress: data.deliveryAddress,
+          paymentMethod: data.paymentMethod,
+          customerNotes: data.customerNotes,
+          promoCode: appliedPromo || undefined,
+          clientReportedTotal: total,
+        }),
+      }).catch((e) => console.warn('Server order sync warning:', e));
+
       // Push notification
       const newNotif: NotificationItem = {
         id: `notif-${Date.now()}`,
@@ -539,11 +712,25 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
       return newOrderId;
     },
-    [cart, restaurants, userProfile, subtotal, deliveryFee, discount, appliedPromo, total, saveToStorage, clearCart, showToast]
+    [cart, restaurants, currentUser, userProfile, subtotal, deliveryFee, discount, appliedPromo, total, saveToStorage, clearCart, showToast]
   );
 
   const updateOrderStatus = useCallback(
     (orderId: string, newStatus: OrderStatus) => {
+      // Dispatch to secure server API to validate role & state machine
+      fetch(`/api/orders/${orderId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus }),
+      })
+        .then(async (res) => {
+          if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            showToast(err.error || 'Status transition rejected by server', 'error');
+          }
+        })
+        .catch(() => {});
+
       setOrders((prev) => {
         const idx = prev.findIndex((o) => o.id === orderId);
         if (idx === -1) return prev;
@@ -551,7 +738,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         const currentOrder = prev[idx];
         const now = new Date().toISOString();
 
-        // Calculate simulated map progress
         let progress = currentOrder.riderLocationProgress || 10;
         if (newStatus === 'Preparing') progress = 30;
         if (newStatus === 'Ready' || newStatus === 'Picked Up') progress = 50;
@@ -572,7 +758,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         return updatedList;
       });
 
-      // Create notification
       const notifMessages: Record<OrderStatus, string> = {
         Pending: `Order #${orderId} is pending.`,
         Confirmed: `Order #${orderId} is confirmed.`,
@@ -668,8 +853,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         id: resId,
         restaurantId: data.restaurantId,
         restaurantName: data.restaurantName,
-        customerName: userProfile.name,
-        customerEmail: userProfile.email,
+        customerName: currentUser?.name || userProfile.name,
+        customerEmail: currentUser?.email || userProfile.email,
         customerPhone: userProfile.phone,
         date: data.date,
         time: data.time,
@@ -685,7 +870,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         return updated;
       });
 
-      // Notification
+      // Synchronize with server API
+      fetch('/api/reservations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      }).catch(() => {});
+
       const notif: NotificationItem = {
         id: `notif-${Date.now()}`,
         title: 'Table Reserved! 🎉',
@@ -704,7 +895,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       showToast(`Table confirmed at ${data.restaurantName}! (Booking #${resId})`, 'success');
       return resId;
     },
-    [userProfile, saveToStorage, showToast]
+    [currentUser, userProfile, saveToStorage, showToast]
   );
 
   const cancelReservation = useCallback(
@@ -748,7 +939,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         return updated;
       });
 
-      // Update restaurant rating
+      // Synchronize with server API
+      fetch('/api/reviews', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newReviewData),
+      }).catch(() => {});
+
       setRestaurants((prev) => {
         return prev.map((r) => {
           if (r.id === newReviewData.restaurantId) {
@@ -834,6 +1031,19 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   // Admin Controls
   const toggleRestaurantOpen = useCallback(
     (restaurantId: string) => {
+      fetch('/api/admin/restaurants', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ restaurantId }),
+      })
+        .then(async (res) => {
+          if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            showToast(err.error || 'Unauthorized: Admin role required.', 'error');
+          }
+        })
+        .catch(() => {});
+
       setRestaurants((prev) => {
         const updated = prev.map((r) => (r.id === restaurantId ? { ...r, isOpen: !r.isOpen } : r));
         saveToStorage(STORAGE_KEYS.RESTS, updated);
@@ -846,6 +1056,19 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const toggleFoodAvailability = useCallback(
     (foodId: string) => {
+      fetch('/api/admin/menu', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ foodId }),
+      })
+        .then(async (res) => {
+          if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            showToast(err.error || 'Unauthorized: Admin role required.', 'error');
+          }
+        })
+        .catch(() => {});
+
       setFoodItems((prev) => {
         const updated = prev.map((f) =>
           f.id === foodId ? { ...f, isAvailable: f.isAvailable === false ? true : false } : f
@@ -860,6 +1083,19 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const updateFoodPrice = useCallback(
     (foodId: string, newPrice: number) => {
+      fetch('/api/admin/menu', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ foodId, newPrice }),
+      })
+        .then(async (res) => {
+          if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            showToast(err.error || 'Unauthorized: Admin role required.', 'error');
+          }
+        })
+        .catch(() => {});
+
       setFoodItems((prev) => {
         const updated = prev.map((f) => (f.id === foodId ? { ...f, price: newPrice } : f));
         saveToStorage(STORAGE_KEYS.FOODS, updated);
@@ -885,6 +1121,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   return (
     <AppContext.Provider
       value={{
+        currentUser,
+        isAuthenticated: !!currentUser,
+        currentRole: currentUser?.role || 'CUSTOMER',
+        isAuthModalOpen,
+        openAuthModal,
+        closeAuthModal,
+        login,
+        register,
+        logout,
+        switchRole,
         cart,
         cartCount,
         subtotal,
