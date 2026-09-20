@@ -113,12 +113,31 @@ export const Footer: React.FC = () => {
           </div>
         </div>
 
-        <div className="border-t border-slate-800 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+        {/* Payment and Trust Badges Row */}
+        <div className="border-t border-slate-800/80 mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex flex-wrap items-center gap-2 text-[11px] text-slate-400">
+            <span className="font-bold text-slate-300 mr-1">Secured Payments via:</span>
+            <span className="px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700 font-bold text-pink-400">bKash</span>
+            <span className="px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700 font-bold text-orange-400">Nagad</span>
+            <span className="px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700 font-bold text-blue-400">VISA</span>
+            <span className="px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700 font-bold text-amber-400">Mastercard</span>
+            <span className="px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700 font-bold text-emerald-400">Cash on Delivery</span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <div className="px-3 py-1.5 rounded-xl bg-slate-800/90 border border-slate-700 text-xs font-semibold text-slate-300 flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span>100% Tamper-Proof Thermal Sealed Delivery</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="border-t border-slate-800/50 mt-8 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
           <p>© {new Date().getFullYear()} FeastHub Bangladesh Ltd. All rights reserved.</p>
           <div className="flex items-center gap-1">
             <span>Crafted with</span>
             <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500" />
-            <span>for food lovers in Dhaka</span>
+            <span>for discerning food lovers in Dhaka</span>
           </div>
         </div>
       </div>

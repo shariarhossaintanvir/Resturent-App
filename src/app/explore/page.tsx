@@ -147,46 +147,112 @@ function ExploreContent() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-7 pb-12">
       {/* Top Header & Search Bar */}
-      <div className="space-y-4">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
-            Explore & Discover
-          </h1>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
-            Search across {restaurants.length} gourmet kitchens and {foodItems.length}+ mouthwatering dishes
-          </p>
-        </div>
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-white via-primary-50/20 to-amber-50/30 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800/40 border border-slate-200/80 dark:border-slate-800 p-5 sm:p-7 shadow-sm">
+        <div className="relative z-10 max-w-2xl space-y-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-50 dark:bg-primary-950/60 border border-primary-100 dark:border-primary-900/50 text-primary-600 dark:text-primary-400 text-xs font-bold">
+            <span className="w-1.5 h-1.5 rounded-full bg-primary-500 animate-pulse" />
+            Curated Discovery & Search
+          </div>
+          <div>
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 dark:text-white tracking-tight">
+              Explore Cravings & Flavors
+            </h1>
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">
+              Browse {restaurants.length} premium restaurants and {foodItems.length}+ signature dishes crafted across Dhaka
+            </p>
+          </div>
 
-        {/* Search Bar */}
-        <div className="relative">
-          <input
-            type="text"
-            placeholder="Search by food dish, restaurant, or cuisine (e.g. Burger, Kacchi, Pizza, Spicy)..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-white dark:bg-slate-900 rounded-2xl pl-11 pr-10 py-3.5 text-sm font-medium text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500 border border-slate-200 dark:border-slate-800 shadow-sm"
-          />
-          <Search className="w-5 h-5 text-slate-400 absolute left-4 top-3.5" />
-          {searchQuery && (
+          {/* Search Bar */}
+          <div className="relative pt-1">
+            <input
+              type="text"
+              placeholder="Search dishes, restaurants, or cuisines (e.g. Smash Burger, Kacchi, Woodfired Pizza)..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-white dark:bg-slate-950/80 rounded-2xl pl-11 pr-11 py-3.5 text-sm font-semibold text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500 border border-slate-200 dark:border-slate-800 shadow-sm transition-all"
+            />
+            <Search className="w-5 h-5 text-primary-500 absolute left-4 top-4.5" />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="absolute right-3.5 top-4.5 p-1 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+
+          {/* Quick Filter Chips */}
+          <div className="flex flex-wrap items-center gap-2 pt-1">
             <button
-              onClick={() => setSearchQuery('')}
-              className="absolute right-3.5 top-3.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+              onClick={() => setMinRating(minRating === 4.5 ? 0 : 4.5)}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all ${
+                minRating === 4.5
+                  ? 'bg-amber-500 text-white shadow-sm ring-2 ring-amber-400/40'
+                  : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-amber-300'
+              }`}
             >
-              <X className="w-4 h-4" />
+              <Star className="w-3.5 h-3.5 fill-current" />
+              <span>4.5+ Rated</span>
             </button>
-          )}
+
+            <button
+              onClick={() => setMaxDeliveryTime(maxDeliveryTime === 30 ? 60 : 30)}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all ${
+                maxDeliveryTime === 30
+                  ? 'bg-primary-500 text-white shadow-sm ring-2 ring-primary-400/40'
+                  : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-primary-300'
+              }`}
+            >
+              <Clock className="w-3.5 h-3.5" />
+              <span>Fast (≤30m)</span>
+            </button>
+
+            <button
+              onClick={() => setOnlyOffers(!onlyOffers)}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all ${
+                onlyOffers
+                  ? 'bg-rose-500 text-white shadow-sm ring-2 ring-rose-400/40'
+                  : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-rose-300'
+              }`}
+            >
+              <Tag className="w-3.5 h-3.5" />
+              <span>Offers & Deals</span>
+            </button>
+
+            <button
+              onClick={() => setOnlyVegetarian(!onlyVegetarian)}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all ${
+                onlyVegetarian
+                  ? 'bg-emerald-600 text-white shadow-sm ring-2 ring-emerald-400/40'
+                  : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-emerald-300'
+              }`}
+            >
+              <Leaf className="w-3.5 h-3.5" />
+              <span>Pure Veg</span>
+            </button>
+
+            {hasActiveFilters && (
+              <button
+                onClick={resetFilters}
+                className="text-xs font-bold text-slate-500 hover:text-rose-500 dark:text-slate-400 ml-1 underline underline-offset-2"
+              >
+                Clear all
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
       {/* Category Pills Scroller */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar">
+      <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
         <button
           onClick={() => setSelectedCategory('all')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold shrink-0 transition-all ${
+          className={`px-4 py-2 rounded-2xl text-xs font-extrabold shrink-0 transition-all ${
             selectedCategory === 'all'
-              ? 'bg-primary-500 text-white shadow-sm'
+              ? 'bg-primary-500 text-white shadow-glow'
               : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:border-slate-300'
           }`}
         >
@@ -197,9 +263,9 @@ function ExploreContent() {
           <button
             key={cat.id}
             onClick={() => setSelectedCategory(cat.id)}
-            className={`px-3.5 py-2 rounded-xl text-xs font-bold shrink-0 transition-all flex items-center gap-1.5 ${
+            className={`px-3.5 py-2 rounded-2xl text-xs font-bold shrink-0 transition-all flex items-center gap-1.5 ${
               selectedCategory === cat.id
-                ? 'bg-primary-500 text-white shadow-sm'
+                ? 'bg-primary-500 text-white shadow-glow'
                 : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:border-slate-300'
             }`}
           >
@@ -211,12 +277,12 @@ function ExploreContent() {
       {/* Main Tabs: All | Restaurants | Foods & Sorting */}
       <div className="flex flex-wrap items-center justify-between gap-4 pt-2 border-t border-slate-200 dark:border-slate-800">
         {/* Type Tabs */}
-        <div className="flex items-center bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
+        <div className="flex items-center bg-slate-100 dark:bg-slate-900 p-1.5 rounded-2xl border border-slate-200/80 dark:border-slate-800">
           <button
             onClick={() => setActiveTab('all')}
-            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-extrabold transition-all ${
               activeTab === 'all'
-                ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm'
+                ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm'
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
             }`}
           >
@@ -224,20 +290,20 @@ function ExploreContent() {
           </button>
           <button
             onClick={() => setActiveTab('restaurants')}
-            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1 ${
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-extrabold transition-all flex items-center gap-1.5 ${
               activeTab === 'restaurants'
-                ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm'
+                ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm'
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
             }`}
           >
             <Store className="w-3.5 h-3.5" />
-            <span>Restaurants ({filteredRestaurants.length})</span>
+            <span>Kitchens ({filteredRestaurants.length})</span>
           </button>
           <button
             onClick={() => setActiveTab('foods')}
-            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1 ${
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-extrabold transition-all flex items-center gap-1.5 ${
               activeTab === 'foods'
-                ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm'
+                ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm'
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
             }`}
           >
@@ -247,13 +313,13 @@ function ExploreContent() {
         </div>
 
         {/* Sort & Filter Controls */}
-        <div className="flex items-center gap-2 w-full sm:w-auto">
+        <div className="flex items-center gap-2.5 w-full sm:w-auto">
           {/* Sort selector */}
           <div className="relative flex-1 sm:flex-initial">
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
-              className="w-full sm:w-auto appearance-none bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2 pr-8 text-xs font-semibold text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer shadow-sm"
+              className="w-full sm:w-auto appearance-none bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl px-4 py-2.5 pr-9 text-xs font-bold text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer shadow-sm"
             >
               <option value="recommended">Sort: Recommended</option>
               <option value="rating">Sort: Top Rated ⭐</option>
@@ -266,16 +332,16 @@ function ExploreContent() {
           {/* Filter toggle */}
           <button
             onClick={() => setShowFiltersMobile(!showFiltersMobile)}
-            className={`px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 border transition-all ${
+            className={`px-4 py-2.5 rounded-2xl text-xs font-bold flex items-center gap-1.5 border transition-all ${
               hasActiveFilters
-                ? 'bg-primary-50 dark:bg-primary-950/40 border-primary-500 text-primary-600 dark:text-primary-400'
-                : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300'
+                ? 'bg-primary-500 text-white border-primary-500 shadow-glow'
+                : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-slate-300'
             }`}
           >
             <SlidersHorizontal className="w-3.5 h-3.5" />
             <span>Filters</span>
             {hasActiveFilters && (
-              <span className="w-2 h-2 rounded-full bg-primary-500" />
+              <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
             )}
           </button>
         </div>
@@ -283,40 +349,45 @@ function ExploreContent() {
 
       {/* Expandable Filter Panel */}
       {showFiltersMobile && (
-        <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-card space-y-4">
-          <div className="flex items-center justify-between">
-            <h4 className="text-xs font-black uppercase tracking-wider text-slate-900 dark:text-white">
-              Filter Options
-            </h4>
+        <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-card space-y-5 animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+            <div>
+              <h4 className="text-sm font-black text-slate-900 dark:text-white">
+                Detailed Filters
+              </h4>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Refine by customer satisfaction, delivery radius, and dietary preferences
+              </p>
+            </div>
             {hasActiveFilters && (
               <button
                 onClick={resetFilters}
-                className="text-xs font-bold text-rose-500 hover:underline"
+                className="text-xs font-bold text-rose-500 hover:text-rose-600 bg-rose-50 dark:bg-rose-950/40 px-3 py-1 rounded-full"
               >
-                Reset All Filters
+                Reset All
               </button>
             )}
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 pt-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5">
             {/* Minimum Rating */}
             <div>
-              <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-1.5">
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">
                 Minimum Rating
               </label>
-              <div className="flex items-center gap-1">
+              <div className="grid grid-cols-4 gap-1.5">
                 {[0, 4.0, 4.5, 4.8].map((rate) => (
                   <button
                     key={rate}
                     type="button"
                     onClick={() => setMinRating(rate)}
-                    className={`flex-1 py-1.5 text-xs font-bold rounded-lg border transition-all ${
+                    className={`py-2 text-xs font-black rounded-xl border transition-all ${
                       minRating === rate
-                        ? 'bg-amber-500 text-white border-amber-500'
-                        : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300'
+                        ? 'bg-amber-500 text-white border-amber-500 shadow-sm'
+                        : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-slate-300'
                     }`}
                   >
-                    {rate === 0 ? 'Any' : `${rate}+ ⭐`}
+                    {rate === 0 ? 'Any' : `${rate}★`}
                   </button>
                 ))}
               </div>
@@ -324,9 +395,14 @@ function ExploreContent() {
 
             {/* Max Delivery Time */}
             <div>
-              <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-1.5">
-                Max Delivery Time ({maxDeliveryTime} mins)
-              </label>
+              <div className="flex items-center justify-between mb-2">
+                <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                  Max Delivery Time
+                </label>
+                <span className="text-xs font-extrabold text-primary-600 dark:text-primary-400">
+                  {maxDeliveryTime} mins
+                </span>
+              </div>
               <input
                 type="range"
                 min="15"
@@ -336,13 +412,22 @@ function ExploreContent() {
                 onChange={(e) => setMaxDeliveryTime(parseInt(e.target.value))}
                 className="w-full accent-primary-500 cursor-pointer"
               />
+              <div className="flex justify-between text-[10px] text-slate-400 font-semibold mt-1">
+                <span>15m Express</span>
+                <span>60m</span>
+              </div>
             </div>
 
             {/* Max Price */}
             <div>
-              <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-1.5">
-                Max Dish Price (৳{maxPrice})
-              </label>
+              <div className="flex items-center justify-between mb-2">
+                <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                  Max Dish Price
+                </label>
+                <span className="text-xs font-extrabold text-emerald-600 dark:text-emerald-400">
+                  ৳{maxPrice}
+                </span>
+              </div>
               <input
                 type="range"
                 min="150"
@@ -352,26 +437,30 @@ function ExploreContent() {
                 onChange={(e) => setMaxPrice(parseInt(e.target.value))}
                 className="w-full accent-primary-500 cursor-pointer"
               />
+              <div className="flex justify-between text-[10px] text-slate-400 font-semibold mt-1">
+                <span>৳150</span>
+                <span>৳1500+</span>
+              </div>
             </div>
 
             {/* Quick toggles */}
-            <div className="flex flex-col justify-center gap-2">
-              <label className="flex items-center gap-2 text-xs font-semibold text-slate-700 dark:text-slate-300 cursor-pointer">
+            <div className="flex flex-col justify-center gap-3 bg-slate-50 dark:bg-slate-800/60 p-3.5 rounded-2xl border border-slate-200/80 dark:border-slate-800">
+              <label className="flex items-center gap-2.5 text-xs font-bold text-slate-700 dark:text-slate-300 cursor-pointer select-none">
                 <input
                   type="checkbox"
                   checked={onlyOffers}
                   onChange={(e) => setOnlyOffers(e.target.checked)}
-                  className="rounded text-primary-500 focus:ring-primary-500"
+                  className="rounded-md text-primary-500 focus:ring-primary-500 w-4 h-4"
                 />
-                <span>Special Offers Only</span>
+                <span>Special Deals & Offers Only</span>
               </label>
 
-              <label className="flex items-center gap-2 text-xs font-semibold text-slate-700 dark:text-slate-300 cursor-pointer">
+              <label className="flex items-center gap-2.5 text-xs font-bold text-slate-700 dark:text-slate-300 cursor-pointer select-none">
                 <input
                   type="checkbox"
                   checked={onlyVegetarian}
                   onChange={(e) => setOnlyVegetarian(e.target.checked)}
-                  className="rounded text-primary-500 focus:ring-primary-500"
+                  className="rounded-md text-emerald-600 focus:ring-emerald-500 w-4 h-4"
                 />
                 <span>Vegetarian Dishes Only 🥦</span>
               </label>
@@ -381,13 +470,13 @@ function ExploreContent() {
       )}
 
       {/* Results Section */}
-      <div className="space-y-8">
+      <div className="space-y-10">
         {/* If 'all' tab has zero restaurants AND zero foods */}
         {activeTab === 'all' && filteredRestaurants.length === 0 && filteredFoods.length === 0 && (
           <EmptyState
             icon={Search}
-            title="No restaurants or food found"
-            description="We couldn't find any culinary matches for your search or active filters. Try clearing some filters or searching for another term."
+            title="No culinary matches found"
+            description="We couldn't find any dishes or restaurants matching your search filters. Try clearing your filters to explore more options."
             actionText="Reset All Filters"
             onActionClick={resetFilters}
           />
@@ -398,9 +487,14 @@ function ExploreContent() {
           <div className="space-y-4">
             {filteredRestaurants.length > 0 && (
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white">
-                  Restaurants ({filteredRestaurants.length})
-                </h3>
+                <div>
+                  <h3 className="text-xl font-black text-slate-900 dark:text-white tracking-tight">
+                    Top Kitchens & Restaurants
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                    Showing {filteredRestaurants.length} matching dining partners
+                  </p>
+                </div>
               </div>
             )}
 
@@ -429,9 +523,14 @@ function ExploreContent() {
           <div className="space-y-4">
             {filteredFoods.length > 0 && (
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white">
-                  Food Dishes ({filteredFoods.length})
-                </h3>
+                <div>
+                  <h3 className="text-xl font-black text-slate-900 dark:text-white tracking-tight">
+                    Featured Dishes & Entrees
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                    Showing {filteredFoods.length} culinary creations
+                  </p>
+                </div>
               </div>
             )}
 

@@ -94,32 +94,32 @@ export default function FoodDetailsPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-4xl mx-auto space-y-6 pb-12">
       {/* Back button */}
       <button
         onClick={() => router.back()}
-        className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-primary-500 transition-colors"
+        className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-bold text-slate-700 dark:text-slate-300 hover:text-primary-500 shadow-sm transition-all"
       >
         <ChevronLeft className="w-4 h-4" />
-        <span>Back</span>
+        <span>Back to Menu</span>
       </button>
 
       {/* Main Food Card Container */}
       <div className="bg-white dark:bg-slate-900 rounded-3xl overflow-hidden border border-slate-200/80 dark:border-slate-800 shadow-card">
         <div className="grid grid-cols-1 md:grid-cols-2">
           {/* Image col */}
-          <div className="relative h-72 md:h-full min-h-[320px] bg-slate-100 dark:bg-slate-800">
+          <div className="relative h-72 md:h-full min-h-[360px] bg-slate-900">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={food.image}
               alt={food.name}
               className="w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent md:hidden" />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent md:hidden" />
 
             <button
               onClick={() => toggleFavoriteFood(food.id)}
-              className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-md flex items-center justify-center text-slate-700 dark:text-slate-200 hover:text-rose-500 shadow-md transition-all hover:scale-110 active:scale-95"
+              className="absolute top-4 right-4 w-11 h-11 rounded-2xl bg-white/90 dark:bg-slate-900/90 backdrop-blur-md flex items-center justify-center text-slate-700 dark:text-slate-200 hover:text-rose-500 shadow-md transition-all hover:scale-105 active:scale-95"
             >
               <Heart
                 className={`w-5 h-5 ${isFav ? 'text-rose-500 fill-rose-500' : ''}`}
@@ -127,9 +127,9 @@ export default function FoodDetailsPage() {
             </button>
 
             {food.isPopular && (
-              <div className="absolute top-4 left-4 bg-amber-500 text-white text-xs font-black px-2.5 py-1 rounded-lg shadow-md uppercase tracking-wider flex items-center gap-1">
+              <div className="absolute top-4 left-4 bg-amber-500 text-white text-[11px] font-black px-3 py-1 rounded-full shadow-md uppercase tracking-wider flex items-center gap-1.5">
                 <Sparkles className="w-3.5 h-3.5" />
-                <span>Popular Favorite</span>
+                <span>Chef's Choice</span>
               </div>
             )}
           </div>
@@ -140,7 +140,7 @@ export default function FoodDetailsPage() {
               {restaurant && (
                 <Link
                   href={`/restaurants/${restaurant.id}`}
-                  className="inline-flex items-center gap-1.5 text-xs font-bold text-primary-600 dark:text-primary-400 hover:underline"
+                  className="inline-flex items-center gap-1.5 text-xs font-extrabold text-primary-600 dark:text-primary-400 hover:underline"
                 >
                   <Store className="w-3.5 h-3.5" />
                   <span>{restaurant.name}</span>
@@ -151,22 +151,22 @@ export default function FoodDetailsPage() {
                 {food.name}
               </h1>
 
-              <div className="flex items-center gap-4 text-xs font-semibold text-slate-600 dark:text-slate-300">
-                <div className="flex items-center gap-1 bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 px-2 py-0.5 rounded-md border border-amber-500/20">
+              <div className="flex flex-wrap items-center gap-3 text-xs font-bold text-slate-600 dark:text-slate-300">
+                <div className="flex items-center gap-1.5 bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 px-2.5 py-1 rounded-xl border border-amber-500/20">
                   <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
-                  <span>{food.rating}</span>
+                  <span className="font-black">{food.rating}</span>
                   <span className="text-slate-400 font-normal">({food.reviewCount})</span>
                 </div>
 
                 {food.prepTimeMinutes && (
-                  <div className="flex items-center gap-1">
-                    <Clock className="w-3.5 h-3.5 text-slate-400" />
+                  <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                    <Clock className="w-3.5 h-3.5 text-primary-500" />
                     <span>{food.prepTimeMinutes} mins</span>
                   </div>
                 )}
 
                 {food.calories && (
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
                     <Flame className="w-3.5 h-3.5 text-orange-500" />
                     <span>{food.calories} kcal</span>
                   </div>
@@ -180,7 +180,7 @@ export default function FoodDetailsPage() {
               {/* Customizations */}
               {food.customizations && food.customizations.length > 0 && (
                 <div className="space-y-4 pt-3 border-t border-slate-100 dark:border-slate-800">
-                  <h3 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
+                  <h3 className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-wider">
                     Customization Options
                   </h3>
 
@@ -190,15 +190,15 @@ export default function FoodDetailsPage() {
                     return (
                       <div key={group.id} className="space-y-2">
                         <div className="flex items-center justify-between text-xs">
-                          <span className="font-bold text-slate-800 dark:text-slate-200">
+                          <span className="font-extrabold text-slate-800 dark:text-slate-200">
                             {group.name}
                           </span>
-                          <span className="text-[10px] text-slate-400">
+                          <span className="text-[10px] font-bold text-slate-400">
                             {group.required ? '(Required)' : '(Optional)'}
                           </span>
                         </div>
 
-                        <div className="space-y-1.5">
+                        <div className="space-y-2">
                           {group.options.map((opt) => {
                             const selected = isOptionSelected(group.id, opt.id);
 
@@ -215,15 +215,15 @@ export default function FoodDetailsPage() {
                                     isSingleChoice
                                   )
                                 }
-                                className={`flex items-center justify-between p-2.5 rounded-xl border text-xs cursor-pointer transition-all ${
+                                className={`flex items-center justify-between p-3 rounded-2xl border text-xs cursor-pointer transition-all ${
                                   selected
-                                    ? 'bg-primary-50 dark:bg-primary-950/40 border-primary-500 font-bold'
-                                    : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700'
+                                    ? 'bg-primary-50 dark:bg-primary-950/40 border-primary-500 font-bold text-slate-900 dark:text-white shadow-sm ring-1 ring-primary-500/30'
+                                    : 'bg-slate-50 dark:bg-slate-800/80 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-slate-300'
                                 }`}
                               >
-                                <div className="flex items-center gap-2">
+                                <div className="flex items-center gap-2.5">
                                   <div
-                                    className={`w-3.5 h-3.5 rounded-${
+                                    className={`w-4 h-4 rounded-${
                                       isSingleChoice ? 'full' : 'md'
                                     } flex items-center justify-center border ${
                                       selected
@@ -235,7 +235,7 @@ export default function FoodDetailsPage() {
                                   </div>
                                   <span>{opt.name}</span>
                                 </div>
-                                <span className="text-slate-500">
+                                <span className={selected ? 'text-primary-600 dark:text-primary-400 font-bold' : 'text-slate-500'}>
                                   {opt.price === 0 ? 'Free' : `+${formatPrice(opt.price)}`}
                                 </span>
                               </div>
@@ -250,33 +250,33 @@ export default function FoodDetailsPage() {
 
               {/* Instructions */}
               <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
-                  Kitchen Notes
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
+                  Kitchen Instructions
                 </label>
                 <input
                   type="text"
                   placeholder="e.g. Less chili, no mayo..."
                   value={specialInstructions}
                   onChange={(e) => setSpecialInstructions(e.target.value)}
-                  className="w-full text-xs px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                  className="w-full text-xs px-3.5 py-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
                 />
               </div>
             </div>
 
             {/* Price & Add to Cart Footer */}
-            <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center gap-4">
-              <div className="flex items-center border border-slate-200 dark:border-slate-700 rounded-xl bg-slate-100 dark:bg-slate-800 p-1">
+            <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center gap-3 sm:gap-4">
+              <div className="flex items-center border border-slate-200/80 dark:border-slate-700 rounded-2xl bg-slate-100 dark:bg-slate-800 p-1.5">
                 <button
                   onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                  className="w-8 h-8 rounded-lg bg-white dark:bg-slate-700 shadow-sm flex items-center justify-center disabled:opacity-40"
+                  className="w-9 h-9 rounded-xl bg-white dark:bg-slate-700 shadow-sm flex items-center justify-center disabled:opacity-40"
                   disabled={quantity <= 1}
                 >
                   <Minus className="w-3.5 h-3.5" />
                 </button>
-                <span className="w-10 text-center font-bold text-sm">{quantity}</span>
+                <span className="w-10 text-center font-black text-sm">{quantity}</span>
                 <button
                   onClick={() => setQuantity((q) => q + 1)}
-                  className="w-8 h-8 rounded-lg bg-white dark:bg-slate-700 shadow-sm flex items-center justify-center"
+                  className="w-9 h-9 rounded-xl bg-white dark:bg-slate-700 shadow-sm flex items-center justify-center"
                 >
                   <Plus className="w-3.5 h-3.5" />
                 </button>
@@ -287,7 +287,7 @@ export default function FoodDetailsPage() {
                 size="lg"
                 fullWidth
                 onClick={handleAddToCart}
-                className="shadow-lg shadow-primary-500/25"
+                className="shadow-glow hover:shadow-glow-lg rounded-2xl py-3.5 font-extrabold"
               >
                 Add to Cart • {formatPrice(totalPrice)}
               </Button>

@@ -15,6 +15,10 @@ import {
   HelpCircle,
   ChevronLeft,
   Check,
+  Headphones,
+  Sliders,
+  PhoneCall,
+  Mail,
 } from 'lucide-react';
 
 export default function SettingsPage() {
@@ -23,7 +27,6 @@ export default function SettingsPage() {
 
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [promosEnabled, setPromosEnabled] = useState(true);
-  const [darkMode, setDarkMode] = useState(false);
   const [language, setLanguage] = useState('English (BD)');
   const [currency, setCurrency] = useState('BDT (৳)');
 
@@ -32,88 +35,118 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
+    <div className="max-w-3xl mx-auto space-y-6 pb-12">
       <div>
         <button
           onClick={() => router.back()}
-          className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-primary-500 mb-1"
+          className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-primary-500 mb-2 transition-colors"
         >
           <ChevronLeft className="w-4 h-4" />
           <span>Back to Profile</span>
         </button>
-        <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-50 dark:bg-primary-950/50 text-primary-600 dark:text-primary-400 text-xs font-bold mb-2">
+          <Sliders className="w-3.5 h-3.5" />
+          <span>Preferences & Telemetry</span>
+        </div>
+        <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">
           Application Settings
         </h1>
-        <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
-          Customize your dining notifications, language, currency and preferences
+        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+          Customize your real-time dining alerts, language, currency and concierge channels
         </p>
       </div>
 
-      <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200/80 dark:border-slate-800 shadow-card space-y-6">
+      <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200/80 dark:border-slate-800 shadow-card space-y-7">
         {/* Notification Preferences */}
         <div className="space-y-4">
-          <div className="flex items-center gap-2 pb-2 border-b border-slate-100 dark:border-slate-800">
-            <Bell className="w-4 h-4 text-primary-500" />
-            <h3 className="font-bold text-sm text-slate-900 dark:text-white uppercase tracking-wider">
-              Notifications & Alerts
-            </h3>
+          <div className="flex items-center gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
+            <div className="w-8 h-8 rounded-xl bg-primary-50 dark:bg-primary-950/60 text-primary-600 dark:text-primary-400 flex items-center justify-center">
+              <Bell className="w-4 h-4" />
+            </div>
+            <div>
+              <h3 className="font-bold text-sm text-slate-900 dark:text-white">
+                Notifications & Order Updates
+              </h3>
+              <p className="text-xs text-slate-400">Manage device push alerts and status milestones</p>
+            </div>
           </div>
 
-          <div className="space-y-3">
-            <label className="flex items-center justify-between cursor-pointer">
-              <div>
-                <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">
-                  Live Order Milestones
+          <div className="space-y-3.5">
+            <div
+              onClick={() => setNotificationsEnabled(!notificationsEnabled)}
+              className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-700/50 cursor-pointer hover:border-primary-500/30 transition-all"
+            >
+              <div className="pr-4">
+                <span className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200 block">
+                  Live Courier & Kitchen Milestones
                 </span>
-                <p className="text-xs text-slate-400">
-                  Receive alerts when chef begins cooking and when rider is approaching
+                <p className="text-xs text-slate-400 mt-0.5">
+                  Receive alerts when chef begins cooking and when rider is within 5 minutes
                 </p>
               </div>
-              <input
-                type="checkbox"
-                checked={notificationsEnabled}
-                onChange={(e) => setNotificationsEnabled(e.target.checked)}
-                className="w-4 h-4 rounded text-primary-500 focus:ring-primary-500 cursor-pointer"
-              />
-            </label>
+              <div
+                className={`w-12 h-6 rounded-full transition-colors relative shrink-0 p-0.5 ${
+                  notificationsEnabled ? 'bg-primary-500' : 'bg-slate-300 dark:bg-slate-700'
+                }`}
+              >
+                <div
+                  className={`w-5 h-5 rounded-full bg-white shadow-sm transition-transform ${
+                    notificationsEnabled ? 'translate-x-6' : 'translate-x-0'
+                  }`}
+                />
+              </div>
+            </div>
 
-            <label className="flex items-center justify-between cursor-pointer">
-              <div>
-                <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">
-                  Weekend Flash Discounts & Promos
+            <div
+              onClick={() => setPromosEnabled(!promosEnabled)}
+              className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-700/50 cursor-pointer hover:border-primary-500/30 transition-all"
+            >
+              <div className="pr-4">
+                <span className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200 block">
+                  Weekend Flash Discounts & Curated Deals
                 </span>
-                <p className="text-xs text-slate-400">
-                  Receive vouchers for 20% off at top Dhaka restaurants
+                <p className="text-xs text-slate-400 mt-0.5">
+                  Exclusive vouchers for 20% off at top Gulshan & Banani partner kitchens
                 </p>
               </div>
-              <input
-                type="checkbox"
-                checked={promosEnabled}
-                onChange={(e) => setPromosEnabled(e.target.checked)}
-                className="w-4 h-4 rounded text-primary-500 focus:ring-primary-500 cursor-pointer"
-              />
-            </label>
+              <div
+                className={`w-12 h-6 rounded-full transition-colors relative shrink-0 p-0.5 ${
+                  promosEnabled ? 'bg-primary-500' : 'bg-slate-300 dark:bg-slate-700'
+                }`}
+              >
+                <div
+                  className={`w-5 h-5 rounded-full bg-white shadow-sm transition-transform ${
+                    promosEnabled ? 'translate-x-6' : 'translate-x-0'
+                  }`}
+                />
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Regional & Currency Preferences */}
-        <div className="space-y-4 pt-4 border-t border-slate-100 dark:border-slate-800">
-          <div className="flex items-center gap-2 pb-2 border-b border-slate-100 dark:border-slate-800">
-            <Globe className="w-4 h-4 text-primary-500" />
-            <h3 className="font-bold text-sm text-slate-900 dark:text-white uppercase tracking-wider">
-              Locale & Currency
-            </h3>
+        <div className="space-y-4 pt-2">
+          <div className="flex items-center gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
+            <div className="w-8 h-8 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+              <Globe className="w-4 h-4" />
+            </div>
+            <div>
+              <h3 className="font-bold text-sm text-slate-900 dark:text-white">
+                Locale & Currency Format
+              </h3>
+              <p className="text-xs text-slate-400">Localization preferences for menus and totals</p>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1">
+              <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
                 Display Language
               </label>
               <select
                 value={language}
                 onChange={(e) => setLanguage(e.target.value)}
-                className="w-full text-xs font-medium px-3.5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                className="w-full text-xs font-semibold px-4 py-3 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
               >
                 <option value="English (BD)">English (Bangladesh)</option>
                 <option value="Bangla">বাংলা (Bangla)</option>
@@ -121,13 +154,13 @@ export default function SettingsPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1">
+              <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
                 Currency Symbol
               </label>
               <select
                 value={currency}
                 onChange={(e) => setCurrency(e.target.value)}
-                className="w-full text-xs font-medium px-3.5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono"
+                className="w-full text-xs font-semibold px-4 py-3 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono focus:outline-none focus:ring-2 focus:ring-primary-500"
               >
                 <option value="BDT (৳)">BDT (৳ Bangladeshi Taka)</option>
               </select>
@@ -136,32 +169,46 @@ export default function SettingsPage() {
         </div>
 
         {/* Help & Concierge Support */}
-        <div className="space-y-4 pt-4 border-t border-slate-100 dark:border-slate-800">
-          <div className="flex items-center gap-2 pb-2 border-b border-slate-100 dark:border-slate-800">
-            <HelpCircle className="w-4 h-4 text-primary-500" />
-            <h3 className="font-bold text-sm text-slate-900 dark:text-white uppercase tracking-wider">
-              Dhaka Concierge Hotline
-            </h3>
+        <div className="space-y-4 pt-2">
+          <div className="flex items-center gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
+            <div className="w-8 h-8 rounded-xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+              <Headphones className="w-4 h-4" />
+            </div>
+            <div>
+              <h3 className="font-bold text-sm text-slate-900 dark:text-white">
+                Dhaka VIP Concierge Desk
+              </h3>
+              <p className="text-xs text-slate-400">Direct escalation line for live orders and inquiries</p>
+            </div>
           </div>
 
-          <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 text-xs space-y-2">
-            <div className="flex justify-between">
-              <span className="text-slate-500">Live Support Phone:</span>
-              <strong className="text-slate-900 dark:text-white font-mono">+880 (2) 988-1234</strong>
+          <div className="p-5 rounded-3xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-700 text-xs space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-slate-500 flex items-center gap-2">
+                <PhoneCall className="w-3.5 h-3.5 text-primary-500" />
+                <span>Express Hotline:</span>
+              </span>
+              <strong className="text-slate-900 dark:text-white font-mono text-sm">+880 (2) 988-1234</strong>
             </div>
-            <div className="flex justify-between">
-              <span className="text-slate-500">Direct Email:</span>
+            <div className="flex items-center justify-between">
+              <span className="text-slate-500 flex items-center gap-2">
+                <Mail className="w-3.5 h-3.5 text-primary-500" />
+                <span>Direct Concierge Email:</span>
+              </span>
               <strong className="text-slate-900 dark:text-white font-mono">concierge@feasthub.com.bd</strong>
             </div>
-            <div className="flex justify-between">
+            <div className="flex items-center justify-between">
               <span className="text-slate-500">Service Hours:</span>
-              <span className="text-slate-900 dark:text-white font-bold">24 Hours / 7 Days a Week</span>
+              <span className="text-emerald-600 dark:text-emerald-400 font-black flex items-center gap-1">
+                <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                24 Hours / 7 Days a Week Live
+              </span>
             </div>
           </div>
         </div>
 
-        <div className="pt-2 flex justify-end">
-          <Button variant="primary" size="md" onClick={handleSavePreferences}>
+        <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex justify-end">
+          <Button variant="primary" size="md" onClick={handleSavePreferences} className="shadow-glow font-bold">
             Save Preferences
           </Button>
         </div>
@@ -169,3 +216,4 @@ export default function SettingsPage() {
     </div>
   );
 }
+

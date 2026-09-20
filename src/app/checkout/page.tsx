@@ -139,21 +139,21 @@ export default function CheckoutPage() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto space-y-6">
+    <div className="max-w-5xl mx-auto space-y-7 pb-16">
       {/* Top Header */}
       <div>
         <button
           onClick={() => router.back()}
-          className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-primary-500 mb-1"
+          className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-primary-500 mb-1.5"
         >
           <ChevronLeft className="w-4 h-4" />
           <span>Back to Cart</span>
         </button>
-        <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
-          Checkout & Payment
+        <h1 className="text-2xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight">
+          Secure Checkout
         </h1>
-        <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-          Review delivery details, contact number, and select preferred simulated payment
+        <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+          Review delivery destination, recipient info, and complete simulated payment
         </p>
       </div>
 
@@ -161,50 +161,53 @@ export default function CheckoutPage() {
         {/* Left Side: Address, Contact, Payment (2 cols) */}
         <div className="lg:col-span-2 space-y-6">
           {/* Section 1: Delivery Address */}
-          <div className="bg-white dark:bg-slate-900 rounded-2xl p-5 sm:p-6 border border-slate-200/80 dark:border-slate-800 shadow-card space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="w-7 h-7 rounded-lg bg-primary-100 dark:bg-primary-950/60 text-primary-600 dark:text-primary-400 flex items-center justify-center font-bold text-xs">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-7 border border-slate-200/80 dark:border-slate-800 shadow-card space-y-5">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+              <div className="flex items-center gap-3">
+                <span className="w-8 h-8 rounded-xl bg-primary-500 text-white flex items-center justify-center font-black text-xs shadow-glow">
                   1
                 </span>
-                <h3 className="font-bold text-base text-slate-900 dark:text-white">
-                  Delivery Address
-                </h3>
+                <div>
+                  <h3 className="font-black text-base sm:text-lg text-slate-900 dark:text-white">
+                    Delivery Address
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Where should your rider deliver?</p>
+                </div>
               </div>
 
               <button
                 onClick={() => setShowNewAddressModal(true)}
-                className="text-xs font-bold text-primary-600 dark:text-primary-400 hover:underline flex items-center gap-1"
+                className="text-xs font-extrabold text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/60 px-3 py-1.5 rounded-full hover:bg-primary-100 flex items-center gap-1.5 transition-colors"
               >
                 <Plus className="w-3.5 h-3.5" />
-                <span>Add New Address</span>
+                <span>Add New</span>
               </button>
             </div>
 
             {/* Address Cards List */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               {userProfile.addresses.map((addr) => {
                 const isSelected = selectedAddressId === addr.id;
                 return (
                   <div
                     key={addr.id}
                     onClick={() => setSelectedAddressId(addr.id)}
-                    className={`p-4 rounded-xl border text-xs cursor-pointer transition-all ${
+                    className={`p-4 sm:p-5 rounded-2xl border text-xs cursor-pointer transition-all ${
                       isSelected
-                        ? 'bg-primary-50/70 dark:bg-primary-950/40 border-primary-500 ring-2 ring-primary-500/20 shadow-sm'
-                        : 'bg-slate-50/60 dark:bg-slate-800/40 border-slate-200 dark:border-slate-700 hover:border-slate-300'
+                        ? 'bg-primary-50/60 dark:bg-primary-950/40 border-primary-500 ring-2 ring-primary-500/20 shadow-sm'
+                        : 'bg-slate-50/50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 hover:border-slate-300'
                     }`}
                   >
-                    <div className="flex items-center justify-between mb-1.5">
-                      <span className="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
-                        <MapPin className="w-3.5 h-3.5 text-primary-500" />
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="font-extrabold text-slate-900 dark:text-white flex items-center gap-1.5">
+                        <MapPin className="w-4 h-4 text-primary-500" />
                         <span>{addr.label}</span>
                       </span>
                       {isSelected && (
-                        <CheckCircle2 className="w-4 h-4 text-primary-500 fill-primary-100 dark:fill-primary-950" />
+                        <CheckCircle2 className="w-4 h-4 text-primary-500 fill-primary-500 text-white" />
                       )}
                     </div>
-                    <p className="text-slate-700 dark:text-slate-300 font-medium leading-relaxed">
+                    <p className="text-slate-700 dark:text-slate-300 font-semibold leading-relaxed">
                       {addr.street}, {addr.area}, {addr.city}
                     </p>
                     {addr.instructions && (
@@ -219,148 +222,160 @@ export default function CheckoutPage() {
           </div>
 
           {/* Section 2: Contact Information */}
-          <div className="bg-white dark:bg-slate-900 rounded-2xl p-5 sm:p-6 border border-slate-200/80 dark:border-slate-800 shadow-card space-y-4">
-            <div className="flex items-center gap-2">
-              <span className="w-7 h-7 rounded-lg bg-primary-100 dark:bg-primary-950/60 text-primary-600 dark:text-primary-400 flex items-center justify-center font-bold text-xs">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-7 border border-slate-200/80 dark:border-slate-800 shadow-card space-y-5">
+            <div className="flex items-center gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
+              <span className="w-8 h-8 rounded-xl bg-primary-500 text-white flex items-center justify-center font-black text-xs shadow-glow">
                 2
               </span>
-              <h3 className="font-bold text-base text-slate-900 dark:text-white">
-                Contact Information
-              </h3>
+              <div>
+                <h3 className="font-black text-base sm:text-lg text-slate-900 dark:text-white">
+                  Recipient Information
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400">For delivery coordination & arrival SMS</p>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1">
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5 flex items-center gap-1.5">
                   <User className="w-3.5 h-3.5 text-slate-400" />
-                  <span>Recipient Name</span>
+                  <span>Recipient Full Name</span>
                 </label>
                 <input
                   type="text"
                   value={contactName}
                   onChange={(e) => setContactName(e.target.value)}
-                  className="w-full text-xs font-medium px-3.5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  className="w-full text-xs font-semibold px-4 py-3 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1">
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5 flex items-center gap-1.5">
                   <Phone className="w-3.5 h-3.5 text-slate-400" />
-                  <span>Phone Number</span>
+                  <span>Rider Contact Phone</span>
                 </label>
                 <input
                   type="text"
                   value={contactPhone}
                   onChange={(e) => setContactPhone(e.target.value)}
-                  className="w-full text-xs font-medium px-3.5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 font-mono"
+                  className="w-full text-xs font-mono font-bold px-4 py-3 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-                Delivery Instructions (Optional)
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                Delivery Instructions for Courier (Optional)
               </label>
               <input
                 type="text"
-                placeholder="e.g. Ring doorbell 4B, leave package with lobby security..."
+                placeholder="e.g. Ring apartment 4B doorbell, leave with front security guard..."
                 value={customerNotes}
                 onChange={(e) => setCustomerNotes(e.target.value)}
-                className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full text-xs px-4 py-3 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
               />
             </div>
           </div>
 
           {/* Section 3: Payment Options */}
-          <div className="bg-white dark:bg-slate-900 rounded-2xl p-5 sm:p-6 border border-slate-200/80 dark:border-slate-800 shadow-card space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="w-7 h-7 rounded-lg bg-primary-100 dark:bg-primary-950/60 text-primary-600 dark:text-primary-400 flex items-center justify-center font-bold text-xs">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-7 border border-slate-200/80 dark:border-slate-800 shadow-card space-y-5">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+              <div className="flex items-center gap-3">
+                <span className="w-8 h-8 rounded-xl bg-primary-500 text-white flex items-center justify-center font-black text-xs shadow-glow">
                   3
                 </span>
-                <h3 className="font-bold text-base text-slate-900 dark:text-white">
-                  Payment Method
-                </h3>
+                <div>
+                  <h3 className="font-black text-base sm:text-lg text-slate-900 dark:text-white">
+                    Payment Method
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Select how you want to pay</p>
+                </div>
               </div>
-              <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
+              <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1.5 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-1 rounded-full">
                 <Lock className="w-3.5 h-3.5" />
-                <span>Simulated Secure Checkout</span>
+                <span>SSL Encrypted</span>
               </span>
             </div>
 
             {/* Payment Method Selector Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
               {/* bKash / Nagad Mobile Payment */}
               <div
                 onClick={() => setSelectedPayment('bkash')}
-                className={`p-4 rounded-xl border text-xs cursor-pointer transition-all flex flex-col justify-between gap-2 ${
+                className={`p-4 sm:p-5 rounded-2xl border text-xs cursor-pointer transition-all flex flex-col justify-between gap-3 ${
                   selectedPayment === 'bkash'
-                    ? 'bg-rose-50/70 dark:bg-rose-950/30 border-rose-500 ring-2 ring-rose-500/20 shadow-sm'
-                    : 'bg-slate-50/60 dark:bg-slate-800/40 border-slate-200 dark:border-slate-700 hover:border-slate-300'
+                    ? 'bg-rose-50/80 dark:bg-rose-950/40 border-rose-500 ring-2 ring-rose-500/30 shadow-sm'
+                    : 'bg-slate-50/50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 hover:border-slate-300'
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <Smartphone className="w-5 h-5 text-rose-600" />
+                  <div className="w-9 h-9 rounded-xl bg-rose-500/10 flex items-center justify-center text-rose-600">
+                    <Smartphone className="w-5 h-5" />
+                  </div>
                   {selectedPayment === 'bkash' && (
-                    <span className="w-2.5 h-2.5 rounded-full bg-rose-600" />
+                    <span className="w-3 h-3 rounded-full bg-rose-600 ring-4 ring-rose-100 dark:ring-rose-950" />
                   )}
                 </div>
                 <div>
-                  <h4 className="font-bold text-slate-900 dark:text-white">bKash / Nagad</h4>
-                  <p className="text-[11px] text-slate-500">Mobile Wallet</p>
+                  <h4 className="font-black text-slate-900 dark:text-white text-sm">bKash / Nagad</h4>
+                  <p className="text-[11px] text-slate-500 mt-0.5">Instant Mobile Wallet</p>
                 </div>
               </div>
 
               {/* Cash on Delivery */}
               <div
                 onClick={() => setSelectedPayment('cash_on_delivery')}
-                className={`p-4 rounded-xl border text-xs cursor-pointer transition-all flex flex-col justify-between gap-2 ${
+                className={`p-4 sm:p-5 rounded-2xl border text-xs cursor-pointer transition-all flex flex-col justify-between gap-3 ${
                   selectedPayment === 'cash_on_delivery'
-                    ? 'bg-emerald-50/70 dark:bg-emerald-950/30 border-emerald-500 ring-2 ring-emerald-500/20 shadow-sm'
-                    : 'bg-slate-50/60 dark:bg-slate-800/40 border-slate-200 dark:border-slate-700 hover:border-slate-300'
+                    ? 'bg-emerald-50/80 dark:bg-emerald-950/40 border-emerald-500 ring-2 ring-emerald-500/30 shadow-sm'
+                    : 'bg-slate-50/50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 hover:border-slate-300'
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <Banknote className="w-5 h-5 text-emerald-600" />
+                  <div className="w-9 h-9 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-600">
+                    <Banknote className="w-5 h-5" />
+                  </div>
                   {selectedPayment === 'cash_on_delivery' && (
-                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-600" />
+                    <span className="w-3 h-3 rounded-full bg-emerald-600 ring-4 ring-emerald-100 dark:ring-emerald-950" />
                   )}
                 </div>
                 <div>
-                  <h4 className="font-bold text-slate-900 dark:text-white">Cash on Delivery</h4>
-                  <p className="text-[11px] text-slate-500">Pay at Doorstep</p>
+                  <h4 className="font-black text-slate-900 dark:text-white text-sm">Cash on Delivery</h4>
+                  <p className="text-[11px] text-slate-500 mt-0.5">Pay at Doorstep</p>
                 </div>
               </div>
 
               {/* Credit / Debit Card */}
               <div
                 onClick={() => setSelectedPayment('card')}
-                className={`p-4 rounded-xl border text-xs cursor-pointer transition-all flex flex-col justify-between gap-2 ${
+                className={`p-4 sm:p-5 rounded-2xl border text-xs cursor-pointer transition-all flex flex-col justify-between gap-3 ${
                   selectedPayment === 'card'
-                    ? 'bg-blue-50/70 dark:bg-blue-950/30 border-blue-500 ring-2 ring-blue-500/20 shadow-sm'
-                    : 'bg-slate-50/60 dark:bg-slate-800/40 border-slate-200 dark:border-slate-700 hover:border-slate-300'
+                    ? 'bg-blue-50/80 dark:bg-blue-950/40 border-blue-500 ring-2 ring-blue-500/30 shadow-sm'
+                    : 'bg-slate-50/50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 hover:border-slate-300'
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <CreditCard className="w-5 h-5 text-blue-600" />
+                  <div className="w-9 h-9 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-600">
+                    <CreditCard className="w-5 h-5" />
+                  </div>
                   {selectedPayment === 'card' && (
-                    <span className="w-2.5 h-2.5 rounded-full bg-blue-600" />
+                    <span className="w-3 h-3 rounded-full bg-blue-600 ring-4 ring-blue-100 dark:ring-blue-950" />
                   )}
                 </div>
                 <div>
-                  <h4 className="font-bold text-slate-900 dark:text-white">Credit / Debit Card</h4>
-                  <p className="text-[11px] text-slate-500">Visa, Mastercard, Amex</p>
+                  <h4 className="font-black text-slate-900 dark:text-white text-sm">Credit / Debit Card</h4>
+                  <p className="text-[11px] text-slate-500 mt-0.5">Visa, MC, AMEX</p>
                 </div>
               </div>
             </div>
 
             {/* Dynamic Simulated Payment Form */}
             {selectedPayment === 'bkash' && (
-              <div className="p-4 rounded-xl bg-rose-50/50 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-900/50 space-y-3">
-                <span className="text-xs font-bold text-rose-700 dark:text-rose-400">
+              <div className="p-4 sm:p-5 rounded-2xl bg-rose-50/50 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-900/50 space-y-3.5">
+                <span className="text-xs font-black text-rose-700 dark:text-rose-400">
                   Simulated bKash / Nagad Instant Gateway
                 </span>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                   <div>
                     <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-1">
                       Account Mobile Number
@@ -369,17 +384,17 @@ export default function CheckoutPage() {
                       type="text"
                       value={mobileWalletNumber}
                       onChange={(e) => setMobileWalletNumber(e.target.value)}
-                      className="w-full text-xs font-mono font-semibold px-3 py-2 rounded-lg bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700"
+                      className="w-full text-xs font-mono font-bold px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700"
                     />
                   </div>
                   <div>
                     <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-1">
-                      4-Digit Mock OTP
+                      4-Digit Simulated OTP
                     </label>
                     <input
                       type="password"
                       defaultValue="1234"
-                      className="w-full text-xs font-mono font-semibold px-3 py-2 rounded-lg bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700"
+                      className="w-full text-xs font-mono font-bold px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700"
                     />
                   </div>
                 </div>
@@ -387,11 +402,11 @@ export default function CheckoutPage() {
             )}
 
             {selectedPayment === 'card' && (
-              <div className="p-4 rounded-xl bg-blue-50/50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-900/50 space-y-3">
-                <span className="text-xs font-bold text-blue-700 dark:text-blue-400">
+              <div className="p-4 sm:p-5 rounded-2xl bg-blue-50/50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-900/50 space-y-3.5">
+                <span className="text-xs font-black text-blue-700 dark:text-blue-400">
                   Simulated Card Payment Form
                 </span>
-                <div className="space-y-2.5">
+                <div className="space-y-3">
                   <div>
                     <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-1">
                       Card Number
@@ -400,7 +415,7 @@ export default function CheckoutPage() {
                       type="text"
                       value={cardNumber}
                       onChange={(e) => setCardNumber(e.target.value)}
-                      className="w-full text-xs font-mono font-semibold px-3 py-2 rounded-lg bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700"
+                      className="w-full text-xs font-mono font-bold px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700"
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-3">
@@ -412,7 +427,7 @@ export default function CheckoutPage() {
                         type="text"
                         value={cardExpiry}
                         onChange={(e) => setCardExpiry(e.target.value)}
-                        className="w-full text-xs font-mono font-semibold px-3 py-2 rounded-lg bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700"
+                        className="w-full text-xs font-mono font-bold px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700"
                       />
                     </div>
                     <div>
@@ -423,7 +438,7 @@ export default function CheckoutPage() {
                         type="password"
                         value={cardCvc}
                         onChange={(e) => setCardCvc(e.target.value)}
-                        className="w-full text-xs font-mono font-semibold px-3 py-2 rounded-lg bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700"
+                        className="w-full text-xs font-mono font-bold px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700"
                       />
                     </div>
                   </div>
@@ -435,9 +450,9 @@ export default function CheckoutPage() {
 
         {/* Right Side: Order Summary & Place Order (1 col) */}
         <div className="space-y-4 sticky top-24">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200/80 dark:border-slate-800 shadow-card space-y-4">
-            <h3 className="font-bold text-base text-slate-900 dark:text-white pb-3 border-b border-slate-100 dark:border-slate-800">
-              Selected Dishes ({cart.length})
+          <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-7 border border-slate-200/80 dark:border-slate-800 shadow-card space-y-4">
+            <h3 className="font-black text-lg text-slate-900 dark:text-white pb-3 border-b border-slate-100 dark:border-slate-800 tracking-tight">
+              Selected Items ({cart.length})
             </h3>
 
             {/* Items mini list */}
@@ -445,12 +460,12 @@ export default function CheckoutPage() {
               {cart.map((item) => (
                 <div key={item.id} className="flex justify-between text-xs">
                   <div className="truncate max-w-[70%]">
-                    <span className="font-bold text-slate-900 dark:text-white mr-1.5">
+                    <span className="font-extrabold text-slate-900 dark:text-white mr-1.5">
                       {item.quantity}x
                     </span>
-                    <span className="text-slate-700 dark:text-slate-300">{item.foodItem.name}</span>
+                    <span className="text-slate-700 dark:text-slate-300 font-medium">{item.foodItem.name}</span>
                   </div>
-                  <span className="font-bold text-slate-900 dark:text-white">
+                  <span className="font-black text-slate-900 dark:text-white">
                     {formatPrice(item.itemTotal)}
                   </span>
                 </div>
@@ -458,22 +473,24 @@ export default function CheckoutPage() {
             </div>
 
             {/* Calculations */}
-            <div className="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-2 text-xs">
+            <div className="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-2.5 text-xs">
               <div className="flex justify-between text-slate-500">
-                <span>Subtotal:</span>
-                <span className="font-semibold text-slate-800 dark:text-slate-200">{formatPrice(subtotal)}</span>
+                <span>Items Subtotal:</span>
+                <span className="font-bold text-slate-800 dark:text-slate-200">{formatPrice(subtotal)}</span>
               </div>
               <div className="flex justify-between text-slate-500">
-                <span>Delivery:</span>
-                <span className="font-semibold text-slate-800 dark:text-slate-200">{formatPrice(deliveryFee)}</span>
+                <span>Express Delivery:</span>
+                <span className="font-bold text-slate-800 dark:text-slate-200">
+                  {deliveryFee === 0 ? 'Free' : formatPrice(deliveryFee)}
+                </span>
               </div>
               {discount > 0 && (
                 <div className="flex justify-between text-emerald-600 font-bold">
-                  <span>Discount:</span>
+                  <span>Promo Discount:</span>
                   <span>-{formatPrice(discount)}</span>
                 </div>
               )}
-              <div className="pt-2 border-t border-slate-200 dark:border-slate-700 flex justify-between text-base font-black text-slate-900 dark:text-white">
+              <div className="pt-3 border-t border-slate-200 dark:border-slate-700 flex justify-between text-base sm:text-lg font-black text-slate-900 dark:text-white">
                 <span>Total Due:</span>
                 <span className="text-primary-600 dark:text-primary-400">{formatPrice(total)}</span>
               </div>
@@ -486,9 +503,9 @@ export default function CheckoutPage() {
               size="lg"
               fullWidth
               isLoading={isSubmitting}
-              className="shadow-xl shadow-primary-500/30"
+              className="shadow-glow hover:shadow-glow-lg rounded-2xl py-4 font-black"
             >
-              Place Order • {formatPrice(total)}
+              Confirm & Place Order • {formatPrice(total)}
             </Button>
           </div>
         </div>

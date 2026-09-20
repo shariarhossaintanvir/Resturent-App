@@ -16,48 +16,48 @@ function OrderSuccessContent() {
   const order = getOrder(orderId);
 
   return (
-    <div className="max-w-xl mx-auto text-center py-12 sm:py-16 space-y-6">
+    <div className="max-w-xl mx-auto text-center py-12 sm:py-20 space-y-7 pb-20">
       {/* Animated Success Badge */}
-      <div className="relative w-24 h-24 rounded-full bg-emerald-100 dark:bg-emerald-950/50 text-emerald-500 mx-auto flex items-center justify-center shadow-lg shadow-emerald-500/10">
+      <div className="relative w-24 h-24 rounded-3xl bg-emerald-500/10 text-emerald-500 mx-auto flex items-center justify-center shadow-lg shadow-emerald-500/20 border border-emerald-500/20">
         <CheckCircle2 className="w-14 h-14 stroke-[2.5] animate-bounce-subtle" />
       </div>
 
       {/* Confirmation Header */}
       <div className="space-y-2">
-        <span className="inline-block px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs font-bold uppercase tracking-wider">
-          Payment Successful
+        <span className="inline-block px-3.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 text-xs font-black uppercase tracking-wider border border-emerald-500/20">
+          Payment Confirmed
         </span>
-        <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
-          ✓ Order Confirmed!
+        <h1 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight">
+          Your Feast is On The Way!
         </h1>
-        <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
-          Your order has been transmitted to the kitchen and is being freshly prepared.
+        <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-md mx-auto">
+          Your order has been transmitted directly to the kitchen and is being freshly prepared with sealed packaging.
         </p>
       </div>
 
       {/* Order Info Card */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200/80 dark:border-slate-800 shadow-card text-left space-y-4">
-        <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+      <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-7 border border-slate-200/80 dark:border-slate-800 shadow-card text-left space-y-4">
+        <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
           <div>
-            <span className="text-[11px] uppercase font-bold text-slate-400">Order Reference</span>
-            <h3 className="text-lg font-black font-mono text-primary-600 dark:text-primary-400">
+            <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Order Reference</span>
+            <h3 className="text-xl font-black font-mono text-primary-600 dark:text-primary-400 mt-0.5">
               #{orderId}
             </h3>
           </div>
           <div className="text-right">
-            <span className="text-[11px] uppercase font-bold text-slate-400">Estimated Delivery</span>
-            <p className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-1 justify-end">
-              <Clock className="w-3.5 h-3.5 text-primary-500" />
-              <span>25–35 minutes</span>
+            <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Estimated Delivery</span>
+            <p className="text-sm font-extrabold text-slate-900 dark:text-white flex items-center gap-1.5 justify-end mt-0.5">
+              <Clock className="w-4 h-4 text-primary-500" />
+              <span>25–35 mins</span>
             </p>
           </div>
         </div>
 
         {order && (
-          <div className="text-xs space-y-2 text-slate-600 dark:text-slate-300">
+          <div className="text-xs space-y-2.5 text-slate-600 dark:text-slate-300">
             <div className="flex justify-between">
               <span className="text-slate-400">Kitchen:</span>
-              <span className="font-bold text-slate-900 dark:text-white">{order.restaurantName}</span>
+              <span className="font-extrabold text-slate-900 dark:text-white">{order.restaurantName}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-slate-400">Deliver To:</span>
@@ -67,7 +67,7 @@ function OrderSuccessContent() {
             </div>
             <div className="flex justify-between">
               <span className="text-slate-400">Payment:</span>
-              <span className="font-semibold uppercase text-slate-900 dark:text-white">
+              <span className="font-bold uppercase text-emerald-600 dark:text-emerald-400">
                 {order.paymentMethod.replace('_', ' ')} (Paid {formatPrice(order.total)})
               </span>
             </div>
@@ -83,14 +83,14 @@ function OrderSuccessContent() {
             size="lg"
             fullWidth
             rightIcon={<ArrowRight className="w-4 h-4" />}
-            className="shadow-lg shadow-primary-500/25"
+            className="shadow-glow hover:shadow-glow-lg rounded-2xl py-4 font-black"
           >
-            Track Order Live
+            Track Rider Live
           </Button>
         </Link>
 
         <Link href="/" className="w-full sm:flex-1">
-          <Button variant="outline" size="lg" fullWidth leftIcon={<Home className="w-4 h-4" />}>
+          <Button variant="outline" size="lg" fullWidth leftIcon={<Home className="w-4 h-4" />} className="rounded-2xl font-bold py-4">
             Back to Home
           </Button>
         </Link>

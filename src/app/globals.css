@@ -4,13 +4,23 @@
 
 @layer base {
   :root {
-    --background: 248 250 252;
+    --background: 250 249 246; /* #FAF9F6 Warm culinary porcelain */
     --foreground: 15 23 42;
+    --card: 255 255 255;
+    --card-foreground: 15 23 42;
+    --primary: 255 90 31;
+    --primary-foreground: 255 255 255;
+    --border: 226 232 240;
   }
 
   .dark {
-    --background: 11 15 23;
+    --background: 10 13 20; /* #0A0D14 Deep obsidian */
     --foreground: 248 250 252;
+    --card: 18 23 34;
+    --card-foreground: 248 250 252;
+    --primary: 255 90 31;
+    --primary-foreground: 255 255 255;
+    --border: 35 44 61;
   }
 
   body {
@@ -18,6 +28,8 @@
     background-color: rgb(var(--background));
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
     -webkit-tap-highlight-color: transparent;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
   }
 }
 
@@ -55,15 +67,36 @@
 
 /* Glassmorphism utilities */
 .glass {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 .dark .glass {
-  background: rgba(15, 23, 42, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(18, 23, 34, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.glass-subtle {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.dark .glass-subtle {
+  background: rgba(18, 23, 34, 0.65);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Hairline border utility */
+.border-hairline {
+  border: 1px solid rgba(15, 23, 42, 0.07);
+}
+
+.dark .border-hairline {
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 /* Radar pulse animation for live delivery map */
@@ -73,15 +106,46 @@
     opacity: 0.9;
   }
   50% {
-    transform: scale(1.6);
-    opacity: 0.2;
+    transform: scale(1.7);
+    opacity: 0.25;
   }
   100% {
-    transform: scale(2.2);
+    transform: scale(2.4);
     opacity: 0;
   }
 }
 
 .animate-radar {
-  animation: radar-pulse 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+  animation: radar-pulse 2.2s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
+
+/* Floating animation */
+@keyframes float-gentle {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.animate-float {
+  animation: float-gentle 4s ease-in-out infinite;
+}
+
+/* Shimmer effect for skeleton & highlights */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.shimmer-gradient {
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+

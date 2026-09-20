@@ -57,50 +57,53 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={`Reserve Table at ${restaurant.name}`} maxWidth="md">
       {confirmedId ? (
-        <div className="text-center py-6 space-y-4">
-          <div className="w-16 h-16 rounded-full bg-emerald-100 dark:bg-emerald-950/50 text-emerald-500 mx-auto flex items-center justify-center animate-bounce-subtle">
-            <CheckCircle2 className="w-10 h-10" />
+        <div className="text-center py-6 space-y-5">
+          <div className="w-20 h-20 rounded-3xl bg-emerald-500/10 text-emerald-500 mx-auto flex items-center justify-center border border-emerald-500/20 shadow-lg shadow-emerald-500/10">
+            <CheckCircle2 className="w-12 h-12 stroke-[2.5] animate-bounce-subtle" />
           </div>
 
           <div>
-            <h3 className="text-xl font-black text-slate-900 dark:text-white">
-              🎉 Your table has been reserved!
+            <span className="text-[11px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-3 py-1 rounded-full border border-emerald-500/20">
+              VIP Table Reserved
+            </span>
+            <h3 className="text-2xl font-black text-slate-900 dark:text-white mt-2">
+              Reservation Confirmed!
             </h3>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              Confirmation booking ID: <strong className="text-primary-600 dark:text-primary-400 font-mono text-sm">#{confirmedId}</strong>
+              Booking reference: <strong className="text-primary-600 dark:text-primary-400 font-mono text-sm">#{confirmedId}</strong>
             </p>
           </div>
 
-          <div className="bg-slate-50 dark:bg-slate-800/60 p-4 rounded-xl text-xs space-y-2 text-left border border-slate-200 dark:border-slate-700">
+          <div className="bg-slate-50 dark:bg-slate-800/60 p-5 rounded-3xl text-xs space-y-2.5 text-left border border-slate-200/80 dark:border-slate-700">
             <div className="flex justify-between">
-              <span className="text-slate-500">Restaurant:</span>
-              <span className="font-bold text-slate-900 dark:text-white">{restaurant.name}</span>
+              <span className="text-slate-400">Dining Kitchen:</span>
+              <span className="font-extrabold text-slate-900 dark:text-white">{restaurant.name}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-500">Date & Time:</span>
-              <span className="font-bold text-slate-900 dark:text-white">{date} at {time}</span>
+              <span className="text-slate-400">Date & Time:</span>
+              <span className="font-extrabold text-slate-900 dark:text-white">{date} at {time}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-500">Guests:</span>
-              <span className="font-bold text-slate-900 dark:text-white">{guests} Persons</span>
+              <span className="text-slate-400">Party Size:</span>
+              <span className="font-extrabold text-slate-900 dark:text-white">{guests} Guests (Priority Booth)</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-500">Guest Contact:</span>
-              <span className="font-bold text-slate-900 dark:text-white">{userProfile.name} ({userProfile.phone})</span>
+              <span className="text-slate-400">Guest Contact:</span>
+              <span className="font-semibold text-slate-900 dark:text-white">{userProfile.name} ({userProfile.phone})</span>
             </div>
           </div>
 
-          <Button variant="primary" size="md" fullWidth onClick={handleDone}>
-            Done & View Reservations
+          <Button variant="primary" size="md" fullWidth onClick={handleDone} className="rounded-2xl font-black py-3.5 shadow-glow">
+            View My Reservations
           </Button>
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
           {/* Guest Count */}
           <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2 flex items-center gap-1.5">
               <Users className="w-3.5 h-3.5 text-primary-500" />
-              <span>Number of Guests</span>
+              <span>Party Size / Number of Guests</span>
             </label>
             <div className="grid grid-cols-5 gap-2">
               {[1, 2, 3, 4, 6].map((num) => (
@@ -108,9 +111,9 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
                   key={num}
                   type="button"
                   onClick={() => setGuests(num)}
-                  className={`py-2 text-xs font-bold rounded-xl border transition-all ${
+                  className={`py-2.5 text-xs font-black rounded-2xl border transition-all ${
                     guests === num
-                      ? 'bg-primary-500 text-white border-primary-500 shadow-sm'
+                      ? 'bg-primary-500 text-white border-primary-500 shadow-glow'
                       : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-slate-400'
                   }`}
                 >
@@ -122,24 +125,24 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
 
           {/* Date Picker */}
           <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2 flex items-center gap-1.5">
               <Calendar className="w-3.5 h-3.5 text-primary-500" />
-              <span>Select Date</span>
+              <span>Select Dining Date</span>
             </label>
             <input
               type="date"
               required
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="w-full text-xs font-medium px-3.5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="w-full text-xs font-semibold px-4 py-3 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
           </div>
 
           {/* Time Slots */}
           <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2 flex items-center gap-1.5">
               <Clock className="w-3.5 h-3.5 text-primary-500" />
-              <span>Select Time Slot</span>
+              <span>Available Time Slots</span>
             </label>
             <div className="grid grid-cols-4 gap-2">
               {timeSlots.map((slot) => (
@@ -147,9 +150,9 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
                   key={slot}
                   type="button"
                   onClick={() => setTime(slot)}
-                  className={`py-2 text-xs font-semibold rounded-xl border transition-all ${
+                  className={`py-2.5 text-xs font-bold rounded-2xl border transition-all ${
                     time === slot
-                      ? 'bg-primary-500 text-white border-primary-500 shadow-sm'
+                      ? 'bg-primary-500 text-white border-primary-500 shadow-glow'
                       : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-slate-400'
                   }`}
                 >
@@ -161,23 +164,23 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
 
           {/* Special Requests */}
           <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2 flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5 text-primary-500" />
-              <span>Special Requests (Optional)</span>
+              <span>Special Occasion & Requests (Optional)</span>
             </label>
             <textarea
               rows={2}
-              placeholder="e.g. Window seat, celebration table, baby high chair..."
+              placeholder="e.g. Window seat, anniversary flowers, baby high chair..."
               value={specialRequests}
               onChange={(e) => setSpecialRequests(e.target.value)}
-              className="w-full text-xs px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="w-full text-xs px-4 py-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
           </div>
 
           {/* CTA */}
           <div className="pt-2">
-            <Button variant="primary" size="md" fullWidth type="submit">
-              Confirm Reservation
+            <Button variant="primary" size="lg" fullWidth type="submit" className="shadow-glow hover:shadow-glow-lg rounded-2xl py-4 font-black">
+              Confirm Table Reservation
             </Button>
           </div>
         </form>

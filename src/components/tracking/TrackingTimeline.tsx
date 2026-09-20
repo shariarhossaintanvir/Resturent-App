@@ -72,13 +72,13 @@ export const TrackingTimeline: React.FC<TrackingTimelineProps> = ({ currentStatu
           const Icon = step.icon;
 
           return (
-            <div key={step.status} className="relative z-10 flex flex-col items-center max-w-[120px] text-center">
+            <div key={step.status} className="relative z-10 flex flex-col items-center max-w-[130px] text-center">
               <div
-                className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 shadow-sm ${
+                className={`w-11 h-11 rounded-2xl flex items-center justify-center transition-all duration-300 shadow-sm ${
                   isCompleted
-                    ? 'bg-primary-500 text-white ring-4 ring-primary-100 dark:ring-primary-950/60'
+                    ? 'bg-primary-500 text-white ring-4 ring-primary-100 dark:ring-primary-950/80 shadow-glow'
                     : 'bg-white dark:bg-slate-800 text-slate-400 border-2 border-slate-200 dark:border-slate-700'
-                } ${isCurrent ? 'scale-110 shadow-glow' : ''}`}
+                } ${isCurrent ? 'scale-110 ring-4 ring-primary-500/40 animate-pulse' : ''}`}
               >
                 {isCompleted && !isCurrent ? (
                   <Check className="w-5 h-5 stroke-[3]" />
@@ -89,7 +89,7 @@ export const TrackingTimeline: React.FC<TrackingTimelineProps> = ({ currentStatu
 
               <div className="mt-3">
                 <p
-                  className={`text-xs font-bold leading-tight ${
+                  className={`text-xs font-black leading-tight ${
                     isCurrent
                       ? 'text-primary-600 dark:text-primary-400'
                       : isCompleted
@@ -99,7 +99,7 @@ export const TrackingTimeline: React.FC<TrackingTimelineProps> = ({ currentStatu
                 >
                   {step.label}
                 </p>
-                <p className="text-[10px] text-slate-400 mt-0.5 leading-tight">{step.sublabel}</p>
+                <p className="text-[10px] text-slate-400 mt-1 leading-tight font-medium">{step.sublabel}</p>
               </div>
             </div>
           );
@@ -107,7 +107,7 @@ export const TrackingTimeline: React.FC<TrackingTimelineProps> = ({ currentStatu
       </div>
 
       {/* Mobile Vertical Step Flow */}
-      <div className="sm:hidden space-y-6 relative pl-6 before:absolute before:left-3 before:top-3 before:bottom-3 before:w-0.5 before:bg-slate-200 dark:before:bg-slate-800">
+      <div className="sm:hidden space-y-6 relative pl-7 before:absolute before:left-3.5 before:top-3 before:bottom-3 before:w-0.5 before:bg-slate-200 dark:before:bg-slate-800">
         {steps.map((step, idx) => {
           const stepNum = idx + 1;
           const isCompleted = stepNum <= currentIndex;
@@ -117,18 +117,18 @@ export const TrackingTimeline: React.FC<TrackingTimelineProps> = ({ currentStatu
           return (
             <div key={step.status} className="relative flex items-start gap-4">
               <div
-                className={`absolute -left-6 top-0 w-6 h-6 rounded-full flex items-center justify-center text-[10px] transition-all ${
+                className={`absolute -left-7 top-0 w-7 h-7 rounded-xl flex items-center justify-center text-xs transition-all ${
                   isCompleted
                     ? 'bg-primary-500 text-white ring-4 ring-primary-100 dark:ring-primary-950'
                     : 'bg-white dark:bg-slate-800 text-slate-400 border border-slate-300 dark:border-slate-700'
-                } ${isCurrent ? 'scale-125' : ''}`}
+                } ${isCurrent ? 'scale-110 shadow-glow' : ''}`}
               >
-                {isCompleted && !isCurrent ? <Check className="w-3 h-3 stroke-[3]" /> : <Icon className="w-3 h-3" />}
+                {isCompleted && !isCurrent ? <Check className="w-3.5 h-3.5 stroke-[3]" /> : <Icon className="w-3.5 h-3.5" />}
               </div>
 
               <div>
                 <p
-                  className={`text-xs font-bold ${
+                  className={`text-xs font-black ${
                     isCurrent
                       ? 'text-primary-600 dark:text-primary-400'
                       : isCompleted
@@ -138,7 +138,7 @@ export const TrackingTimeline: React.FC<TrackingTimelineProps> = ({ currentStatu
                 >
                   {step.label}
                 </p>
-                <p className="text-[11px] text-slate-400 mt-0.5">{step.sublabel}</p>
+                <p className="text-[11px] text-slate-400 mt-0.5 font-medium">{step.sublabel}</p>
               </div>
             </div>
           );
